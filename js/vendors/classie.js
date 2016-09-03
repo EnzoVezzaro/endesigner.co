@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
  * classie - class helper functions
  * from bonzo https://github.com/ded/bonzo
@@ -11,70 +12,72 @@
 /*jshint browser: true, strict: true, undef: true */
 /*global define: false */
 
-( function( window ) {
+"use strict";
 
-'use strict';
+(function (window) {
 
-// class helper functions from bonzo https://github.com/ded/bonzo
+  "use strict";
 
-function classReg( className ) {
-  return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
-}
+  // class helper functions from bonzo https://github.com/ded/bonzo
 
-// classList support for class management
-// altho to be fair, the api sucks because it won't accept multiple classes at once
-var hasClass, addClass, removeClass;
+  function classReg(className) {
+    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+  }
 
-if ( 'classList' in document.documentElement ) {
-  hasClass = function( elem, c ) {
-    return elem.classList.contains( c );
+  // classList support for class management
+  // altho to be fair, the api sucks because it won't accept multiple classes at once
+  var hasClass, addClass, removeClass;
+
+  if ("classList" in document.documentElement) {
+    hasClass = function (elem, c) {
+      return elem.classList.contains(c);
+    };
+    addClass = function (elem, c) {
+      elem.classList.add(c);
+    };
+    removeClass = function (elem, c) {
+      elem.classList.remove(c);
+    };
+  } else {
+    hasClass = function (elem, c) {
+      return classReg(c).test(elem.className);
+    };
+    addClass = function (elem, c) {
+      if (!hasClass(elem, c)) {
+        elem.className = elem.className + " " + c;
+      }
+    };
+    removeClass = function (elem, c) {
+      elem.className = elem.className.replace(classReg(c), " ");
+    };
+  }
+
+  function toggleClass(elem, c) {
+    var fn = hasClass(elem, c) ? removeClass : addClass;
+    fn(elem, c);
+  }
+
+  var classie = {
+    // full names
+    hasClass: hasClass,
+    addClass: addClass,
+    removeClass: removeClass,
+    toggleClass: toggleClass,
+    // short names
+    has: hasClass,
+    add: addClass,
+    remove: removeClass,
+    toggle: toggleClass
   };
-  addClass = function( elem, c ) {
-    elem.classList.add( c );
-  };
-  removeClass = function( elem, c ) {
-    elem.classList.remove( c );
-  };
-}
-else {
-  hasClass = function( elem, c ) {
-    return classReg( c ).test( elem.className );
-  };
-  addClass = function( elem, c ) {
-    if ( !hasClass( elem, c ) ) {
-      elem.className = elem.className + ' ' + c;
-    }
-  };
-  removeClass = function( elem, c ) {
-    elem.className = elem.className.replace( classReg( c ), ' ' );
-  };
-}
 
-function toggleClass( elem, c ) {
-  var fn = hasClass( elem, c ) ? removeClass : addClass;
-  fn( elem, c );
-}
+  // transport
+  if (typeof define === "function" && define.amd) {
+    // AMD
+    define(classie);
+  } else {
+    // browser global
+    window.classie = classie;
+  }
+})(window);
 
-var classie = {
-  // full names
-  hasClass: hasClass,
-  addClass: addClass,
-  removeClass: removeClass,
-  toggleClass: toggleClass,
-  // short names
-  has: hasClass,
-  add: addClass,
-  remove: removeClass,
-  toggle: toggleClass
-};
-
-// transport
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( classie );
-} else {
-  // browser global
-  window.classie = classie;
-}
-
-})( window );
+},{}]},{},[1]);
